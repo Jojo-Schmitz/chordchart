@@ -78,7 +78,7 @@ function addRest(i, score, cursor, duration)
 
 function run()
       {
-      var chordStyle = QFileDialog.getOpenFileName(this, "MuseScore: Chord Style file", pluginPath + "/../styles", "XML file (*.xml)");
+      var chordStyle = QFileDialog.getOpenFileName(this, "MuseScore: Chord Style file", "styles", "XML file (*.xml)");
       if(! chordStyle)
             return;
             
