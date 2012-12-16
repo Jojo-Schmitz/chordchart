@@ -3,9 +3,10 @@
 //  Linux Music Score Editor
 //  $Id:$
 //
-//  Test plugin
+//  Chord Chart plugin
 //
 //  Copyright (C)2008 Werner Schweer and others
+//  Copyright (C)2012 Marc Sabatella & Joachim Schmitz
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License version 2.
@@ -31,8 +32,8 @@
 //---------------------------------------------------------
 
 function init()
-      {
-      };
+{
+}
 
 var chordTypes = [
             1,   2,   3,   4,   5,   6,   7,   8,   9,
@@ -63,28 +64,28 @@ var chordTypes = [
       ];
 
 function addRest(i, score, cursor, duration)
-      {
+{
       var rest      = new Rest(score);
       rest.tickLen  = duration;
       cursor.add(rest);
-      cursor.next();
 
-      var h = new Harmony(score);
-      h.root = 14;
+      var h  = new Harmony(score);
+      h.root = 14; // 14 == C
       h.id   = chordTypes[i];
       rest.addHarmony(h);
-      rest.visible = false;
-      };
+      rest.visible = false; // Doesn't work, nor is documented.
+}
 
 function run()
-      {
-      var chordStyle = QFileDialog.getOpenFileName(this, "MuseScore: Chord Style file", "styles", "XML file (*.xml)");
+{
+      var chordStyle = QFileDialog.getOpenFileName(this,
+	   "MuseScore: Chord Style file", "styles", "XML file (*.xml)");
       if(! chordStyle)
             return;
             
       var score   = new Score();
-      score.name  = "chordchart"
-      score.title = "Chord Chart";
+      score.name  = "chordchart"; // Doesn't work, nor is documented anymore.
+      score.title = "Chord Chart"; // Gets overwritten a few lines down.
       score.appendPart("");
 
       var fi = new QFileInfo(chordStyle);
@@ -93,8 +94,8 @@ function run()
       score.setStyle("lastSystemFillLimit", 0.0);
 
       var n = chordTypes.length;
-      var systems = Math.floor((n + 7) / 8);
-      var measures = systems * 4;
+      var systems = Math.floor((n + 7) / 8); // 8 chords per line
+      var measures = systems * 4; // in 4 measures each, so 2 per measure
       score.appendMeasures(measures);
       var cursor = new Cursor(score);
       cursor.staff = 0;
@@ -102,23 +103,23 @@ function run()
       cursor.rewind();
 
       for (var i = 0; i < n; ++i) {
-            addRest(i, score, cursor, 960);
-            }
+            addRest(i, score, cursor, 960); // 960 == half note (minim)
+            cursor.next();
+      }
 
       cursor.rewind();
       var i = 1;
       while (!cursor.eos()) {
             var m = cursor.measure();
-            if (i % 4 == 0) {
+            if (i % 4 == 0) { // Line break every 4 measures.
                   m.lineBreak = true;
-                  }
-            else {
+            } else { // Really needed? Shouldn't harm though.
                   m.lineBreak = false;
-                  }
+            }
             cursor.nextMeasure();
             i++;
-            }
-      };
+      }
+}
 
 //---------------------------------------------------------
 //    menu:  defines were the function will be placed
@@ -129,6 +130,6 @@ var mscorePlugin = {
       menu: 'Plugins.Lead Sheet.Create Chord Chart',
       init: init,
       run:  run
-      };
+};
 
 mscorePlugin;
