@@ -70,8 +70,9 @@ function addChord(i, score, cursor, duration)
       cursor.add(chord);
 
       var note       = new Note(score);
-      note.pitch     = 72 // 72 == C5, 60 == C4)
-      note.visible   = false; // Hide note head for now.
+      note.pitch     = 60 // C4, goot for basing chord on.
+      note.visible   = false; // Hide note head for now
+      note.velocity  = 0; // and make it silent.
       chord.addNote(note); // Needed for chord.addHarmony() to work.
       chord.noStem   = true; // Hide stem for now.
 
