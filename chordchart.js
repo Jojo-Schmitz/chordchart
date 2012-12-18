@@ -80,6 +80,11 @@ function addChord(i, score, cursor, duration)
       h.root = note.tpc;
       h.id   = chordTypes[i];
       chord.addHarmony(h);
+
+      var text = new Text(score);
+      text.text = "ID " + h.id;
+      text.yOffset = 5;
+      cursor.putStaffText(text);
 }
 
 function run()
