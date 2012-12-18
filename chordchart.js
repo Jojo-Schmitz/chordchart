@@ -70,9 +70,9 @@ function addChord(i, score, cursor, duration)
       cursor.add(chord);
 
       var note       = new Note(score);
-      note.pitch     = 60 // C4, goot for basing chord on.
+      note.pitch     = 60 // C4, good for basing chord on.
       note.visible   = false; // Hide note head for now
-      note.velocity  = 0; // and make it silent.
+      note.velocity  = 1; // and make it pretty silent.
       chord.addNote(note); // Needed for chord.addHarmony() to work.
       chord.noStem   = true; // Hide stem for now.
 
@@ -101,7 +101,7 @@ function run()
 
       var n = chordTypes.length;
       var systems = Math.floor((n + 7) / 8); // 8 chords per line
-      var measures = systems * 2; // in 2 measures each, so 4 per measure
+      var measures = systems * 8; // in 8 measures each, so 1 per measure
       score.appendMeasures(measures);
       var cursor = new Cursor(score);
       cursor.staff = 0;
@@ -109,7 +109,7 @@ function run()
       cursor.rewind();
 
       for (var i = 0; i < n; ++i) {
-            addChord(i, score, cursor, 480); // 480 == quarter note (crochet)
+            addChord(i, score, cursor, 480*4); // 480 == quarter note (crochet)
             cursor.next();
       }
 
@@ -117,7 +117,7 @@ function run()
       var i = 1;
       while (!cursor.eos()) {
             var m = cursor.measure();
-            if (i % 2 == 0) { // Line break every 2 measures.
+            if (i % 8 == 0) { // Line break every 8 measures.
                   m.lineBreak = true;
             } else { // Really needed? Shouldn't harm though.
                   m.lineBreak = false;
